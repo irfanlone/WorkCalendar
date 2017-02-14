@@ -3,10 +3,10 @@
 Welcome to Work Calendar. To experiment with that code, run `bin/console` for an interactive prompt.
 
 # table
-- [implementation](implementation)
-- [consideration and trade-offs](consideration-and-trade-offs)
-- [some special cases](some-special-cases)
-- [usage](usage)
+- [implementation](#implementation)
+- [consideration and trade-offs](#consideration-and-trade-offs)
+- [some special cases](#some-special-cases)
+- [usage](#usage)
 
 ## Implementation
 
