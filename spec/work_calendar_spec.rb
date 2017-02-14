@@ -57,50 +57,64 @@ RSpec.describe WorkCalendar do
       allow(described_class).to receive(:holidays).and_return(holidays)
     end
 
-    context 'when weekdays are empty' do
-      let(:weekdays) { [] }
+    context 'when date provided is a valid date' do
+      context 'when weekdays are empty' do
+        let(:weekdays) { [] }
 
-      context 'when holidays are empty' do
-        let(:holidays) { [] }
+        context 'when holidays are empty' do
+          let(:holidays) { [] }
 
-        it 'returns true' do
-          expect(subject).to be true
-        end
-      end
-
-      context 'when holidays are not empty' do
-        context 'when given date is present in holiday' do
-          it 'returns false' do
-            expect(subject).to be false
+          it 'returns true' do
+            expect(subject).to be true
           end
         end
 
-        context 'when given date is not a holiday' do
-          let(:date) { Date.new(2015, 1, 2) }
-          it 'returns true' do
-            expect(subject).to be true
+        context 'when holidays are not empty' do
+          context 'when given date is present in holiday' do
+            it 'returns false' do
+              expect(subject).to be false
+            end
+          end
+
+          context 'when given date is not a holiday' do
+            let(:date) { Date.new(2015, 1, 2) }
+            it 'returns true' do
+              expect(subject).to be true
+            end
+          end
+        end
+      end
+
+      context 'when weekdays are not empty' do
+        context 'when holidays are empty' do
+          let(:holidays) { [] }
+
+          context 'when given date is weekday' do
+            let(:date) { Date.new(2014, 12, 30) }
+
+            it 'returns true' do
+              expect(subject).to be true
+            end
+          end
+
+          context 'when given date is not a weekday' do
+            it 'returns false' do
+              expect(subject).to be false
+            end
           end
         end
       end
     end
 
-    context 'when weekdays are not empty' do
-      context 'when holidays are empty' do
-        let(:holidays) { [] }
+    context 'when date provided is not a valid date type' do
+      let(:date) { nil }
 
-        context 'when given date is weekday' do
-          let(:date) { Date.new(2014, 12, 30) }
+      it 'returns false' do
+        expect(subject).to eq(false)
+      end
 
-          it 'returns true' do
-            expect(subject).to be true
-          end
-        end
-
-        context 'when given date is not a weekday' do
-          it 'returns false' do
-            expect(subject).to be false
-          end
-        end
+      it 'does not raise an error' do
+        expect { subject }.to_not raise_error
       end
     end
   end
@@ -117,18 +131,33 @@ RSpec.describe WorkCalendar do
       allow(described_class).to receive(:holidays).and_return(holidays)
     end
 
-    context 'when number is positive' do
-      let(:output_date) { Date.new(2014, 12, 29) }
+    context 'when date provided is valid date type' do
+      context 'when number is positive' do
+        let(:output_date) { Date.new(2014, 12, 29) }
 
-      it 'returns the desired date' do
-        expect(subject).to eq(output_date)
+        it 'returns the desired date' do
+          expect(subject).to eq(output_date)
+        end
+      end
+
+      context 'when number is negative' do
+        let(:number) { -1 }
+
+        it 'returns the given date' do
+          expect(subject).to eq(date)
+        end
       end
     end
 
-    context 'when number is negative' do
-      let(:number) { -1 }
-      it 'returns the given date' do
-        expect(subject).to eq(date)
+    context 'when date provided is invalid' do
+      let(:date) { nil }
+
+      it 'returns false' do
+        expect(subject).to be nil
+      end
+
+      it 'does not raise an error' do
+        expect { subject }.to_not raise_error
       end
     end
   end
@@ -146,19 +175,33 @@ RSpec.describe WorkCalendar do
       allow(described_class).to receive(:holidays).and_return(holidays)
     end
 
-    context 'when number is positive' do
-      let(:output_date) { Date.new(2015, 1, 9) }
+    context 'when date provided is valid' do
+      context 'when number is positive' do
+        let(:output_date) { Date.new(2015, 1, 9) }
 
-      it 'returns the desired date' do
-        expect(subject).to eq(output_date)
+        it 'returns the desired date' do
+          expect(subject).to eq(output_date)
+        end
+      end
+
+      context 'when number is negative' do
+        let(:number) { -1 }
+
+        it 'returns the given date' do
+          expect(subject).to eq(date)
+        end
       end
     end
 
-    context 'when number is negative' do
-      let(:number) { -1 }
+    context 'when date provided is invalid' do
+      let(:date) { nil }
 
-      it 'returns the given date' do
-        expect(subject).to eq(date)
+      it 'returns false' do
+        expect(subject).to be nil
+      end
+
+      it 'does not raise an error' do
+        expect { subject }.to_not raise_error
       end
     end
   end
@@ -177,34 +220,48 @@ RSpec.describe WorkCalendar do
       allow(described_class).to receive(:holidays).and_return(holidays)
     end
 
-    context 'when current_date less than end date' do
-      let(:active_dates) do
-        [
-          Date.new(2015, 1, 5),
-          Date.new(2015, 1, 6),
-          Date.new(2015, 1, 7),
-          Date.new(2015, 1, 8),
-        ]
+    context 'when date provided is valid' do
+      context 'when current_date less than end date' do
+        let(:active_dates) do
+          [
+            Date.new(2015, 1, 5),
+            Date.new(2015, 1, 6),
+            Date.new(2015, 1, 7),
+            Date.new(2015, 1, 8),
+          ]
+        end
+
+        it 'returns array of active dates' do
+          expect(subject).to eq(active_dates)
+        end
       end
 
-      it 'returns array of active dates' do
-        expect(subject).to eq(active_dates)
+      context 'when current_date newer than end date' do
+        let(:start_date) { Date.new(2015, 1, 15) }
+
+        it 'returns empty array' do
+          expect(subject).to eq([])
+        end
+      end
+
+      context 'when current_date is same as end date' do
+        let(:start_date) { Date.new(2015, 1, 12) }
+
+        it 'returns empty array' do
+          expect(subject).to eq([])
+        end
       end
     end
 
-    context 'when current_date newer than end date' do
-      let(:start_date) { Date.new(2015, 1, 15) }
+    context 'when date provided is invalid' do
+      let(:start_date) { nil }
 
-      it 'returns empty array' do
-        expect(subject).to eq([])
+      it 'returns false' do
+        expect(subject).to be nil
       end
-    end
 
-    context 'when current_date is same as end date' do
-      let(:start_date) { Date.new(2015, 1, 12) }
-
-      it 'returns empty array' do
-        expect(subject).to eq([])
+      it 'does not raise an error' do
+        expect { subject }.to_not raise_error
       end
     end
   end

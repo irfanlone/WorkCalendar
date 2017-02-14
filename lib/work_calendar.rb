@@ -42,6 +42,9 @@ module WorkCalendar
       else
         weekdays.include?(DAY[date.wday]) && !holidays.include?(date)
       end
+    rescue NoMethodError
+      p 'provided date is not valid'
+      false
     end
 
     # Public: find the active date which occured *number* of days before given date
@@ -59,6 +62,9 @@ module WorkCalendar
       end
 
       current_date
+    rescue NoMethodError
+      p 'provided data is not of valid type'
+      nil
     end
 
     # Public: find the active date which will occur *number* of days after given date
@@ -76,6 +82,9 @@ module WorkCalendar
       end
 
       current_date
+    rescue NoMethodError
+      p 'provided date is not of valid type'
+      nil
     end
 
     # Public: find all active dates between given interval of dates
@@ -94,6 +103,9 @@ module WorkCalendar
       end
 
       active_dates
+    rescue NoMethodError
+      p 'provided date is not of valid type'
+      nil
     end
   end
 end

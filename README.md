@@ -22,6 +22,9 @@ I went ahead with class level methods mainly becuause we do not need class insta
  # this just calls the test method in TestCal class which calls configure method in module
  TestCal.new.test
 ```
+
+ 3. parameter validation: Adding nil checks or checking for date to be valid type. In order to take advantage of ruby's duck typing I didnt add these kind of validation, instead I went ahead with rescuing a `NoMethodError`. In this way the module by itself has no idea of the type of the *date* variable passed in. Method is capable of accepting any object which responds to `wday`, `prev_day`, `next_day`
+
 ### some special cases
 I encountered few special cases (edge cases) some of them are:
 
@@ -34,7 +37,7 @@ I encountered few special cases (edge cases) some of them are:
 
 3. given date is newer than the end date for the between method
     - this is handled by returning empty array in this case
-    
+
 
 ## Usage
 Some of the operations you can perform
