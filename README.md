@@ -23,7 +23,7 @@ I went ahead with class level methods mainly becuause we do not need class insta
  TestCal.new.test
 ```
 
- 3. parameter validation: Adding nil checks or checking for date to be valid type. In order to take advantage of ruby's duck typing I didnt add these kind of validation, instead I went ahead with rescuing a `NoMethodError`. In this way the module by itself has no idea of the type of the *date* variable passed in. Method is capable of accepting any object which responds to `wday`, `prev_day`, `next_day`
+ 3. parameter validation: Adding nil checks or checking for date to be valid type. In order to take advantage of ruby's duck typing I didnt add these kind of validation, instead I went ahead with rescuing a `NoMethodError`. In this way the module by itself has no idea of the type of the *date* variable passed in. Having less knowledge of outside object makes the module more flexible. Now methods are capable of accepting any object which responds to `wday`, `prev_day`, `next_day`
 
 ### some special cases
 I encountered few special cases (edge cases) some of them are:
