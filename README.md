@@ -12,6 +12,8 @@ Welcome to Work Calendar. To experiment with that code, run `bin/console` for an
 
 All the main logic in the gem is being maintained in `work_calendar.rb` file. I chose to implement the functionality using a module to provide the flexibility to consume this library as mixin by other components. all the methods are implemented as class level as methods. mainly becuause we do not need class instantiation to perform these operations.
 
+Tests are written using `rspec`
+
 ## Consideration and trade-offs
 1. whether to implement using module or a class: I went ahead with implmenting this as a module provides providing methods that you can use across multiple classes. thinking about them as library (one of the main points in requirement)
 2. class methods or instance methods:
