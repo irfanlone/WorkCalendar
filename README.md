@@ -1,39 +1,68 @@
 # WorkCalendar
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/WorkCalendar`. To experiment with that code, run `bin/console` for an interactive prompt.
+Welcome to Work Calendar. To experiment with that code, run `bin/console` for an interactive prompt.
 
-TODO: Delete this and the text above, and describe your gem
+# table
+- [implementation](implementation)
+- [consideration and trade-offs](consideration-and-trade-offs)
+- [some special cases](some-special-cases)
+- [usage](usage)
 
-## Installation
+## Implementation
 
-Add this line to your application's Gemfile:
+All the main logic in the gem is being maintained in `work_calendar.rb` file. I chose to implement the functionality using a module to provide the flexibility to consume this library as mixin by other components. all the methods are implemented as class level as methods. mainly becuause we do not need class instantiation to perform these operations.
 
-```ruby
-gem 'WorkCalendar'
+## Consideration and trade-offs
+1. whether to implement using module or a class: I went ahead with implmenting this as a module provides providing methods that you can use across multiple classes. thinking about them as library (one of the main points in requirement)
+2. class methods or instance methods:
+I went ahead with class level methods mainly becuause we do not need class instantiation to perform these operations. These operations can be performed independent of the behaviour of the class that is consuming it. To verify it works as intended I have added a `TestCal` class which can be used to test the library (module) is behaving as intended when consumed by other classes. To do so jut execute the bellow line
 ```
+ # this just calls the test method in TestCal class which calls configure method in module
+ TestCal.new.test
+```
+### some special cases
+I encountered few special cases (edge cases) some of them are:
 
-And then execute:
+1. when the block passed to configure does not contain a list
+    - configure method handles this case by setting the missing list to empty array (if both are not passed, both are set to empty array).
+    - `active?` method handles this by checking only the non empty list to see if the given date is active or not.
 
-    $ bundle
+2. negative number being passed to days_after/before method
+    - this is being handled by returning the given the date back when a number is negative.
 
-Or install it yourself as:
-
-    $ gem install WorkCalendar
+3. given date is newer than the end date for the between method
+    - this is handled by returning empty array in this case
+    
 
 ## Usage
+Some of the operations you can perform
 
-TODO: Write usage instructions here
+### Clone the repo
+`https://github.com/sujaysudheenda/WorkCalendar.git`
+`cd WorkCalendar`
 
-## Development
+### Run the console
+`bin/console`
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+### Configure a calendar
+```
+WorkCalendar.configure do |c|
+  c.weekdays = %i[mon tue wed thu fri]
+  c.holidays = [Date.new(2015, 1, 1), Date.new(2015, 7, 3), Date.new(2015, 12, 25)]
+end
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### determine if a given date is "active"
+`WorkCalendar.active?(Date.new(2014, 1, 5))`
 
-## Contributing
+### return the date the specified number of "active" days *before* a date
+`WorkCalendar.days_before(5, Date.new(2015, 1, 5))`
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/WorkCalendar.
+### return the date the specified number of "active" days *after* a date
+`WorkCalendar.days_after(5, Date.new(2015, 1, 5))`
 
+### return the "active" dates between two dates, exclusive of the second date
+`WorkCalendar.between(Date.new(2015, 1, 1), Date.new(2015, 1, 8))`
 
 ## License
 
